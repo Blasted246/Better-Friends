@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "betterfriends",
+  "version": "${version}",
+  "name": "Better Friends",
+  "description": "Make the new friends buttons fit better.",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/betterfriends/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.blasted.client.BetterfriendsClient"
+    ],
+    "main": [
+      "com.blasted.Betterfriends"
+    ]
+  },
+  "mixins": [
+    "betterfriends.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "*"
+  }
+}

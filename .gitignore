@@ -10,8 +10,42 @@ buildNumber.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 
-# Eclipse m2e generated files
-# Eclipse Core
+# Eclipse
 .project
-# JDT-specific (Eclipse Java Development Tools)
 .classpath
+.settings/
+bin/
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+
+# IDEs
+.idea/
+.vscode/
+out/
+*.iml
+*.iws
+*.ipr
+
+# Runtime
+run/
+logs/
+crash-reports/
+debug.log
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Extracted Minecraft Source Code
+/Better Friends/net/
+/Better Friends/com/mojang/
+/Better Friends/assets/minecraft/
+/Better Friends/data/minecraft/
+/Better Friends/META-INF/
+/Better Friends/flightrecorder-config.jfc
+/Better Friends/version.json
+.mcassetsroot
