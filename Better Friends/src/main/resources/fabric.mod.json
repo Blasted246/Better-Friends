@@ -23,6 +23,11 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
-    "minecraft": "*"
+    "minecraft": [
+      ">=26.2-snapshot.2 <=26.2-snapshot.9999",
+      ">=26.2-pre.0 <=26.2-pre.9999",
+      ">=26.2-rc.0 <=26.2-rc.1",
+      ">=26.2 <26.3"
+    ]
   }
 }
