@@ -53,12 +53,22 @@ public abstract class PauseScreenMixin extends Screen {
             }
         }
 
-        if (smallButtons.size() >= 4) {
-            smallButtons.sort((a, b) -> Integer.compare(a.getX(), b.getX()));
-            reportBugsButton = smallButtons.get(0);
-            feedbackButton = smallButtons.get(1);
-            friendsButton = smallButtons.get(2);
-            reportPlayerButton = smallButtons.get(3);
+        List<AbstractWidget> vanillaSmallButtons = new ArrayList<>();
+        List<AbstractWidget> modButtons = new ArrayList<>();
+        for (int i = 0; i < smallButtons.size(); i++) {
+            if (i < 4) {
+                vanillaSmallButtons.add(smallButtons.get(i));
+            } else {
+                modButtons.add(smallButtons.get(i));
+            }
+        }
+
+        if (vanillaSmallButtons.size() == 4) {
+            vanillaSmallButtons.sort((a, b) -> Integer.compare(a.getX(), b.getX()));
+            reportBugsButton = vanillaSmallButtons.get(0);
+            feedbackButton = vanillaSmallButtons.get(1);
+            friendsButton = vanillaSmallButtons.get(2);
+            reportPlayerButton = vanillaSmallButtons.get(3);
         }
 
         if (reportBugsButton != null) { this.removeWidget(reportBugsButton); reportBugsButton.visible = false; }
@@ -70,8 +80,12 @@ public abstract class PauseScreenMixin extends Screen {
         if (optionsButton != null) {
             for (AbstractWidget widget : widgets) {
                 if (widget.getWidth() == 204 && Math.abs(widget.getY() - (optionsButton.getY() - 24)) <= 2) {
-                    mojangCustomAdditionsButton = widget;
-                    break;
+                    String msg = widget.getMessage().getString().toLowerCase();
+                    String className = widget.getClass().getName().toLowerCase();
+                    if (!msg.contains("mods") && !className.contains("modmenu")) {
+                        mojangCustomAdditionsButton = widget;
+                        break;
+                    }
                 }
             }
         }
@@ -87,14 +101,40 @@ public abstract class PauseScreenMixin extends Screen {
         final AbstractWidget finalOptionsBtn = optionsButton;
         final AbstractWidget finalLanBtn = lanButton;
 
-        int row3Y = this.height / 4 + 72 - 16;
-        int row4Y = this.height / 4 + 96 - 16;
-        if (optionsButton != null) {
-            row4Y = optionsButton.getY();
-            if (mojangCustomAdditionsButton != null) {
-                row4Y -= 24;
+        AbstractWidget modMenuWideButton = null;
+        AbstractWidget disconnectButton = null;
+        for (AbstractWidget widget : widgets) {
+            String msg = widget.getMessage().getString().toLowerCase();
+            String className = widget.getClass().getName().toLowerCase();
+            if (widget.getWidth() > 24 && (msg.contains("mods") || className.contains("modmenu"))) {
+                modMenuWideButton = widget;
             }
-            row3Y = row4Y - 24;
+            
+            String key = "";
+            if (widget.getMessage().getContents() instanceof net.minecraft.network.chat.contents.TranslatableContents tc) {
+                key = tc.getKey();
+            }
+            String widgetMsg = widget.getMessage().getString();
+            if (key.equals("menu.disconnect") || key.equals("menu.returnToMenu") || widgetMsg.contains("Quit") || widgetMsg.contains("Disconnect")) {
+                disconnectButton = widget;
+            }
+        }
+
+        int baseRowY;
+        int row3Y;
+        int row4Y;
+        int disconnectY;
+
+        if (modMenuWideButton != null) {
+            baseRowY = this.height / 4 + 52;
+            row3Y = baseRowY + 24;
+            row4Y = baseRowY + 48;
+            disconnectY = baseRowY + 72;
+        } else {
+            baseRowY = this.height / 4 + 56;
+            row3Y = baseRowY;
+            row4Y = baseRowY + 24;
+            disconnectY = baseRowY + 48;
         }
 
         Button.Builder builder = Button.builder(Component.literal("Online..."), (btn) -> {
@@ -175,6 +215,41 @@ public abstract class PauseScreenMixin extends Screen {
                 customServerLinks.active = false;
             }
             this.addRenderableWidget(customServerLinks);
+        }
+
+        if (modMenuWideButton != null) {
+            modMenuWideButton.setX(this.width / 2 - 102);
+            modMenuWideButton.setY(baseRowY);
+            modMenuWideButton.setWidth(204);
+            modMenuWideButton.visible = true;
+            modMenuWideButton.active = true;
+        }
+
+        if (disconnectButton != null) {
+            disconnectButton.setX(this.width / 2 - 102);
+            disconnectButton.setY(disconnectY);
+            disconnectButton.setWidth(204);
+        }
+
+
+
+        if (!modButtons.isEmpty()) {
+            int modSpacing = 4;
+            int totalWidth = 0;
+            for (AbstractWidget modBtn : modButtons) {
+                totalWidth += modBtn.getWidth();
+            }
+            totalWidth += (modButtons.size() - 1) * modSpacing;
+            
+            int startX = this.width / 2 - totalWidth / 2;
+            int newRowY = this.height - 32; // Anchored to the bottom of the screen
+            
+            int currentX = startX;
+            for (AbstractWidget modBtn : modButtons) {
+                modBtn.setX(currentX);
+                modBtn.setY(newRowY);
+                currentX += modBtn.getWidth() + modSpacing;
+            }
         }
     }
 }
