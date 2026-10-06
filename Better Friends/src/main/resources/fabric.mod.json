@@ -1,30 +1,32 @@
 {
-  "schemaVersion": 1,
-  "id": "betterfriends",
-  "version": "${version}",
-  "name": "Better Friends",
-  "description": "Make the new friends buttons fit better.",
-  "authors": [],
-  "contact": {},
-  "license": "MIT",
-  "icon": "assets/betterfriends/icon.png",
-  "environment": "client",
-  "entrypoints": {
-    "client": [
-      "com.blasted.client.BetterfriendsClient"
-    ],
-    "main": [
-      "com.blasted.Betterfriends"
-    ]
-  },
-  "mixins": [
-    "betterfriends.mixins.json"
-  ],
-  "depends": {
-    "fabricloader": ">=${loader_version}",
-    "fabric-api": "*",
-    "minecraft": [
-      ">=26.1 <=27.0"
-    ]
-  }
+	"schemaVersion": 1,
+	"id": "better-friends",
+	"version": "${version}",
+	"name": "Better Friends",
+	"description": "Moves 1x1 buttons to the bottom of the screen.",
+	"authors": [
+		"Blasted"
+	],
+	"contact": {},
+	"license": "MIT",
+	"icon": "assets/better-friends/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			{
+				"value": "nya.blasted.BetterFriends",
+				"adapter": "kotlin"
+			}
+		]
+	},
+	"mixins": [
+		"better-friends.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": ">=26.1",
+		"java": ">=25",
+		"fabric-api": "*",
+		"fabric-language-kotlin": "*"
+	}
 }
